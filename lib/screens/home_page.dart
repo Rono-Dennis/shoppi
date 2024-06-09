@@ -44,10 +44,6 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            FadeInUp(
-                preferences: const AnimationPreferences(duration: Duration(milliseconds: 1500),),
-                child:  const MakeProduct(image: 'assets/images/beauty-1.jpg', title: 'Beauty', price: '100\$')
-            ),
           ],
         ),
       ),
