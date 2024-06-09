@@ -1,9 +1,7 @@
 import 'package:clothes_boutique/screens/signin_screen.dart';
 import 'package:clothes_boutique/screens/signup_screen.dart';
 import 'package:clothes_boutique/widgets/custom_scaffold.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../themes/theme.dart';
 import '../widgets/welcome_button.dart';
 
@@ -74,17 +72,5 @@ class WelcomeScreen extends StatelessWidget {
         ],
       ),
     );
-    /*return CustomScaffold(
-      child: Column(
-        children: [
-          Flexible(
-            child: Container(
-            child: Center(child: Text('welcome'),),
-          ),),
-          Flexible(
-              child: Text('welcome'))
-        ],
-      ),
-    );*/
   }
 }

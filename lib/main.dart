@@ -1,3 +1,5 @@
+import 'package:clothes_boutique/components/category_page.dart';
+import 'package:clothes_boutique/screens/home_page.dart';
 import 'package:clothes_boutique/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      home: const HomePage(),
+      // home: const CategoryPage(image: 'assets/images/beauty-1.jpg', title: 'Beauty', price: '100\$', tag: '\$',),
+      // home: const WelcomeScreen(),
     );
   }
 }
