@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   flutter_animator: ^3.1.0
   page_transition: ^2.0.4
+  curved_navigation_bar: ^1.0.5
+  google_fonts: ^3.0.1
+  http: ^0.13.3
 
 
   # The following adds the Cupertino Icons font to your application.

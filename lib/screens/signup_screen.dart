@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:clothes_boutique/screens/signin_screen.dart';
 import 'package:clothes_boutique/widgets/custom_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:http/http.dart' as http;
 
+import '../models/user.dart';
 import '../themes/theme.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,6 +20,42 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formSignupKey = GlobalKey<FormState>();
   bool agreePersonalData = true;
+  User user = User("","","","");
+
+
+  Future<void> makePostRequest() async {
+    const url = "http://172.17.192.1:8080/register";
+    const headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({
+      'firstname': user.firstname,
+      'lastname': user.lastname,
+      'email': user.email,
+      'username': user.username
+    });
+
+    try {
+      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        print('Response data: ${response.body}');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SignInScreen()),
+        );
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -65,6 +105,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        onChanged: (value) {
+                          setState(() {
+                            user.firstname = value;
+                          });
+                        },
                         decoration: InputDecoration(
                           label: const Text('Full Name'),
                           hintText: 'Enter Full Name',
@@ -95,6 +140,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return 'Please enter Email';
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            user.email = value;
+                          });
                         },
                         decoration: InputDecoration(
                           label: const Text('Email'),
@@ -128,6 +178,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return 'Please enter Password';
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            user.username = value;
+                          });
                         },
                         decoration: InputDecoration(
                           label: const Text('Password'),
@@ -186,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formSignupKey.currentState!.validate() &&
                                 agreePersonalData) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -194,6 +249,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   content: Text('Processing Data'),
                                 ),
                               );
+                              await makePostRequest();
                             } else if (!agreePersonalData) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:clothes_boutique/screens/shop_page.dart';
 import 'package:clothes_boutique/screens/signup_screen.dart';
+import 'package:clothes_boutique/screens/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:http/http.dart' as http;
 
+import '../helper/FetchLogin.dart';
+import '../models/user.dart';
+import '../models/userLogin.dart';
 import '../themes/theme.dart';
 import '../widgets/custom_scaffold.dart';
 
@@ -14,12 +22,24 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _formKey = GlobalKey<FormState>();
+  UserLogin userLogin = UserLogin(password: "", email: "", username: "");
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+
+  bool validateLogin(String email, String password) {
+    for (var login in FetchLogin.logins) {
+      if (login.email == email && login.password == password) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: Column(
+    return Scaffold(
+      body: Column(
         children: [
           const Expanded(
             flex: 1,
@@ -49,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
-                          color: lightColorScheme.primary,
+                          color: Colors.blue, // Change to your color
                         ),
                       ),
                       const SizedBox(
@@ -61,6 +81,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             return 'Please enter Email';
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            userLogin.email = value;
+                          });
                         },
                         decoration: InputDecoration(
                           label: const Text('Email'),
@@ -93,6 +118,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             return 'Please enter Password';
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            userLogin.password = value;
+                          });
                         },
                         decoration: InputDecoration(
                           label: const Text('Password'),
@@ -129,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     rememberPassword = value!;
                                   });
                                 },
-                                activeColor: lightColorScheme.primary,
+                                activeColor: Colors.blue, // Change to your color
                               ),
                               const Text(
                                 'Remember me',
@@ -140,11 +170,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             ],
                           ),
                           GestureDetector(
-                            child: Text(
+                            child: const Text(
                               'Forget password?',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
+                                color: Colors.blue, // Change to your color
                               ),
                             ),
                           ),
@@ -157,22 +187,24 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data')),
-                              );
+                            if (_formSignInKey.currentState!.validate()) {
+                              if (validateLogin(userLogin.email, userLogin.password)) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ShopPage(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Invalid login credentials'),
+                                  ),
+                                );
+                              }
                             }
                           },
-                          child: const Text('Sign up'),
+                          child: const Text('Sign in'),
                         ),
                       ),
                       const SizedBox(
@@ -241,11 +273,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Sign up',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
+                                color: Colors.blue, // Change to your color
                               ),
                             ),
                           ),
@@ -265,3 +297,10 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 }
+
+
+
+
+
+
+

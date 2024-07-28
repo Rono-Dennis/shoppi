@@ -1,8 +1,12 @@
 import 'package:clothes_boutique/components/make_best_category.dart';
 import 'package:clothes_boutique/components/make_category.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/animation/animation_preferences.dart';
 import 'package:flutter_animator/widgets/fading_entrances/fade_in_up.dart';
+
+import '../helper/BestCategories.dart';
+import '../helper/Categories.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -14,6 +18,13 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
+    final items = <Widget>[
+      const Icon(Icons.home_filled, size: 30),
+      const Icon(Icons.pages, size: 30,),
+      const Icon(Icons.arrow_drop_down_circle, size: 30,),
+      const Icon(Icons.email, size: 30,),
+      const Icon(Icons.account_circle_outlined, size: 30,),
+    ];
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -111,14 +122,27 @@ class _ShopPageState extends State<ShopPage> {
                   const SizedBox(height: 20,),
                   SizedBox(
                     height: 150,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: const <Widget>[
-                        MakeCategory(image: 'assets/images/beauty.jpg', title: 'Beauty', tag: 'beauty'),
-                        MakeCategory(image: 'assets/images/clothes.jpg', title: 'Clothes', tag: 'clothes'),
-                        MakeCategory(image: 'assets/images/perfume.jpg', title: 'Perfume', tag: 'perfume'),
-                        MakeCategory(image: 'assets/images/glass.jpg', title: 'Glass', tag: 'glass'),
-                      ],
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: Fetch.categories.length,
+                        padding: const EdgeInsets.all(12),
+                        itemBuilder: (BuildContext context, int index){
+                          final category = Fetch.categories[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // Define what happens when the button is pressed
+                              },
+                              child: MakeCategory(
+                                image: category.image,
+                                title: category.title,
+                                tag: category.tag,
+                              ),
+                            ),
+                          );
+                        }
                     ),
                   ),
                   SizedBox(height: 40,),
@@ -132,14 +156,26 @@ class _ShopPageState extends State<ShopPage> {
                   const SizedBox(height: 20,),
                   SizedBox(
                     height: 150,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: const <Widget>[
-                        MakeBestCategory(image: 'assets/images/tech.jpg', title: 'Tech'),
-                        MakeBestCategory(image: 'assets/images/watch.jpg', title: 'Watch'),
-                        MakeBestCategory(image: 'assets/images/perfume.jpg', title: 'Perfume'),
-                        MakeBestCategory(image: 'assets/images/glass.jpg', title: 'Glass'),
-                      ],
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: FetchCategories.bestCategories.length,
+                        padding: const EdgeInsets.all(12),
+                        itemBuilder: (BuildContext context, int index){
+                          final category = FetchCategories.bestCategories[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // Define what happens when the button is pressed
+                              },
+                              child: MakeBestCategory(
+                                image: category.image,
+                                title: category.title,
+                              ),
+                            ),
+                          );
+                        }
                     ),
                   ),
                   const SizedBox(height: 80,),
@@ -148,6 +184,10 @@ class _ShopPageState extends State<ShopPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        items: items,
+        backgroundColor: const Color(0xffF8F6F5),
       ),
     );
   }
